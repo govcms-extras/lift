@@ -1,0 +1,56 @@
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+archives:
+  - id: lift
+    format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    # use zip for windows archives
+    format_overrides:
+    - goos: windows
+      format: zip
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
+brews:
+  - name: lift
+    ids:
+    - lift
+    tap:
+      owner: govcms-extras
+      name: homebrew-lift
+      branch: main
+    folder: Formula
+    homepage: "https://github.com/govcms-extras/lift"
+    description: "Lift the GovCMS local development"
+    license: "GPLv3"
+    skip_upload: false
+    dependencies:
+      - name: git
+      - name: docker
+      - name: docker-compose
+    test: system "#{bin}/lift version"
+    install: bin.install "lift"
