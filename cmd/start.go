@@ -17,9 +17,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/govcms-extras/lift/pkg/utils/docker"
+	"github.com/govcms-extras/lift/pkg/config/setup"
 	"github.com/spf13/cobra"
 )
 
@@ -29,9 +27,7 @@ var startCmd = &cobra.Command{
 	Short: "Start the service",
 	Long:  "Start the service",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("start called")
-
-		docker.DockerContainerCreate()
+		setup.Start()
 	},
 }
 
